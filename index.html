@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ordinals Automation</title>
+</head>
+<body>
+    <h1>Rune Etching Interface</h1>
+
+    <!-- Start Server -->
+    <button id="start-server">Start Server</button>
+    <p id="server-status"></p>
+
+    <!-- Create YAML -->
+    <h3>Create YAML</h3>
+    <label for="rune-name">Rune Name:</label>
+    <input type="text" id="rune-name" required>
+    <br>
+    <label for="rune-symbol">Symbol:</label>
+    <input type="text" id="rune-symbol" required>
+    <br>
+    <label for="rune-supply">Supply:</label>
+    <input type="number" id="rune-supply" required>
+    <br>
+    <button id="create-yaml">Create YAML</button>
+    <p id="yaml-status"></p>
+
+    <!-- Etch a Rune -->
+    <h3>Etch a Rune</h3>
+    <button id="etch-rune">Etch Rune</button>
+    <p id="commitment-hash"></p>
+
+    <!-- Get Mint Address -->
+    <h3>Get Mint Address</h3>
+    <label for="commit-hash">Commitment Hash:</label>
+    <input type="text" id="commit-hash" required>
+    <br>
+    <button id="get-address">Get Mint Address</button>
+    <p id="mint-address"></p>
+
+    <!-- Mine First Block -->
+    <h3>Mine First Block</h3>
+    <label for="mint-address-1">Mint Address:</label>
+    <input type="text" id="mint-address-1" required>
+    <br>
+    <button id="mine-first-block">Mine First Block</button>
+    <p id="mine1-status"></p>
+
+    <!-- Mine Second Block -->
+    <h3>Mine Second Block</h3>
+    <label for="mint-address-2">Mint Address:</label>
+    <input type="text" id="mint-address-2" required>
+    <br>
+    <button id="mine-second-block">Mine Second Block</button>
+    <p id="mine2-status"></p>
+
+    <button onclick="window.location.href='http://0.0.0.0:9001/runes'">View Runes</button>
+
+    <script>
+        document.getElementById('start-server').onclick = function() {
+            fetch('/ord-env', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => document.getElementById('server-status').innerText = data.message)
+                .catch(error => document.getElementById('server-status').innerText = 'Error: ' + error.message);
+        };
+
+        document.getElementById('create-yaml').onclick = function() {
+            const name = document.getElementById('rune-name').value;
+            const symbol = document.getElementById('rune-symbol').value;
+            const supply = document.getElementById('rune-supply').value;
+
+            fetch('/create-yaml', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, symbol, supply })
+            })
+            .then(response => response.json())
+            .then(data => document.getElementById('yaml-status').innerText = data.message)
+            .catch(error => document.getElementById('yaml-status').innerText = 'Error: ' + error.message);
+        };
+
+        document.getElementById('etch-rune').onclick = function() {
+            fetch('/etch-rune', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => document.getElementById('commitment-hash').innerText = 'Commitment Hash: ' + data.commit_hash)
+                .catch(error => document.getElementById('commitment-hash').innerText = 'Error: ' + error.message);
+        };
+
+        document.getElementById('get-address').onclick = function() {
+            const commit_hash = document.getElementById('commit-hash').value;
+
+            fetch('/explore', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ commit_hash })
+            })
+            .then(response => response.json())
+            .then(data => document.getElementById('mint-address').innerText = 'Mint Address: ' + data.mint_address)
+            .catch(error => document.getElementById('mint-address').innerText = 'Error: ' + error.message);
+        };
+
+        document.getElementById('mine-first-block').onclick = function() {
+            const mint_address = document.getElementById('mint-address-1').value;
+
+            fetch('/mine1', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ mint_address })
+            })
+            .then(response => response.json())
+            .then(data => document.getElementById('mine1-status').innerText = data.message)
+            .catch(error => document.getElementById('mine1-status').innerText = 'Error: ' + error.message);
+        };
+
+        document.getElementById('mine-second-block').onclick = function() {
+            const mint_address = document.getElementById('mint-address-2').value;
+
+            fetch('/mine2', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ mint_address })
+            })
+            .then(response => response.json())
+            .then(data => document.getElementById('mine2-status').innerText = data.message)
+            .catch(error => document.getElementById('mine2-status').innerText = 'Error: ' + error.message);
+        };
+    </script>
+</body>
+</html>

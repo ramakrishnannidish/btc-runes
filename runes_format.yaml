@@ -1,0 +1,38 @@
+# example batch file
+
+# inscription modes:
+# - `same-sat`: inscribe on the same sat
+# - `satpoints`: inscribe on the first sat of specified satpoint's output
+# - `separate-outputs`: inscribe on separate postage-sized outputs
+# - `shared-output`: inscribe on a single output separated by postage
+mode: separate-outputs
+
+
+# rune to etch (optional)
+etching:
+  # rune name
+  rune: THE•GOATEE•RUNESS
+  # allow subdividing super-unit into `10^divisibility` sub-units
+  divisibility: 2
+  # premine
+  premine: 1000.00
+  # total supply, must be equal to `premine + terms.cap * terms.amount`
+  supply: 10000.00
+  # currency symbol
+  symbol: "🎃"
+  # mint terms (optional)
+  terms:
+    # amount per mint
+    amount: 100.00
+    # maximum number of mints
+    cap: 90
+
+  turbo: true
+
+# inscriptions to inscribe
+inscriptions:
+  # path to inscription content
+- file: /Users/arunabha003/Documents/AVAP/dogrune.png
+
+
+
